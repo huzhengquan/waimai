@@ -1,5 +1,5 @@
 (defproject waimai "0.1.0"
-  :description "FIXME: 外卖平台的SDK, 包括百度外卖、美团外卖、饿了么外卖"
+  :description "外卖平台的SDK, 包括百度外卖、美团外卖、饿了么外卖"
   :url "https://github.com/huzhengquan/waimai"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
