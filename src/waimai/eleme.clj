@@ -1,8 +1,7 @@
 (ns waimai.eleme
   (:require [org.httpkit.client :as httpc]
             [clojure.data.json :as json]
-            digest)
-  (:import java.util.Base64))
+            digest))
 
 (defn- make-base-params
   [appkey action token]
@@ -33,28 +32,34 @@
 
 (defn request
   "饿了么的api接口"
-  [appkey secret token action params]
-  (let [payload (-> (make-base-params appkey action token)
-                  (assoc :params params)
+  [action params & {:keys [token app_key secret]
+                    :or {token (System/getProperty "waimai.eleme.token")
+                         app_key (System/getProperty "waimai.eleme.app_key")
+                         secret (System/getProperty "waimai.eleme.secret")}
+                    :as opts}]
+  (let [payload (-> (make-base-params app_key action token)
+                  (assoc :params (or params {}))
                   (wrap-sign secret))]
     @(httpc/request
-       {:method :post
-        :url "https://open-api-sandbox.shop.ele.me/api/v1/"
-        :headers {"content-type" "application/json; charset=utf-8"}
-        :body (json/write-str payload)
-        :throw-exceptions false
-        :timeout 30000
-        :accept :json})))
+       (merge
+         {:method :post
+          :url "https://open-api.shop.ele.me/api/v1/"
+          :headers {"content-type" "application/json; charset=utf-8"}
+          :body (json/write-str payload) }
+         (dissoc opts :token :app_key :secret)))))
 
 (defn token
   "获取token 刷新token"
-  [appkey secret params]
-  @(httpc/request {:method :post
-                   :url "https://open-api-sandbox.shop.ele.me/token"
-                   :headers {"content-type" "application/x-www-form-urlencoded"
-                             "Authorization" (str "Basic " (.encodeToString (Base64/getEncoder) (.getBytes (str appkey ":" secret ))))}
-                   :form-params params 
-                   :throw-exceptions false
-                   :timeout 3000
-                   :accept :json}))
+  [params & {:keys [app_key secret]
+             :or {app_key (System/getProperty "waimai.eleme.app_key")
+                  secret (System/getProperty "waimai.eleme.secret")}
+             :as opts}]
+  @(httpc/request 
+     (merge
+       {:method :post
+        :url "https://open-api.shop.ele.me/token"
+        :headers {"content-type" "application/x-www-form-urlencoded"}
+        :basic-auth [app_key secret]
+        :form-params params}
+       (dissoc opts :app_key :secret))))
 

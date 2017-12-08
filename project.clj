@@ -1,4 +1,4 @@
-(defproject waimai "0.1.0"
+(defproject waimai "0.1.1"
   :description "外卖平台的SDK, 包括百度外卖、美团外卖、饿了么外卖"
   :url "https://github.com/huzhengquan/waimai"
   :license {:name "Eclipse Public License"
@@ -7,5 +7,4 @@
                  [org.clojure/data.json "0.2.6"]
                  [digest "1.4.6"]
                  [http-kit "2.2.0"]]
-  :aot :all
-  :main waimai.core/foo)
+  :aot :all)
