@@ -1,10 +1,10 @@
 # waimai
 
-clojure外卖平台开发工具，支持百度外卖(3.0)、美团外卖、饿了么外卖
+clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、饿了么外卖
 
 ## Installation
 
-Add `[waimai "0.1.1"]` to your `project.clj`.
+在`project.clj`文件的`dependencies`部分增加`[waimai "0.1.2"]`
 
 ## Usage
 
@@ -58,9 +58,3 @@ Add `[waimai "0.1.1"]` to your `project.clj`.
 @(waimai.baidu/request "shop.get" {:shop_id "xxx"})
 ```
 
-## License
-
-Copyright © 2017 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
