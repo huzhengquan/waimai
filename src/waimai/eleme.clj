@@ -32,34 +32,38 @@
 
 (defn request
   "饿了么的api接口"
-  [action params & {:keys [token app_key secret]
+  [action params & {:keys [token app_key secret url]
                     :or {token (System/getProperty "waimai.eleme.token")
                          app_key (System/getProperty "waimai.eleme.app_key")
-                         secret (System/getProperty "waimai.eleme.secret")}
+                         secret (System/getProperty "waimai.eleme.secret")
+                         url (or (System/getProperty "waimai.eleme.api_url")
+                                 "https://open-api.shop.ele.me/api/v1/") }
                     :as opts}]
   (let [payload (-> (make-base-params app_key action token)
                   (assoc :params (or params {}))
                   (wrap-sign secret))]
-    @(httpc/request
-       (merge
-         {:method :post
-          :url "https://open-api.shop.ele.me/api/v1/"
-          :headers {"content-type" "application/json; charset=utf-8"}
-          :body (json/write-str payload) }
-         (dissoc opts :token :app_key :secret)))))
+    (httpc/request
+      (merge
+        {:method :post
+         :url url
+         :headers {"content-type" "application/json; charset=utf-8"}
+         :body (json/write-str payload) }
+        (dissoc opts :token :app_key :secret)))))
 
 (defn token
   "获取token 刷新token"
-  [params & {:keys [app_key secret]
+  [params & {:keys [app_key secret url]
              :or {app_key (System/getProperty "waimai.eleme.app_key")
-                  secret (System/getProperty "waimai.eleme.secret")}
+                  secret (System/getProperty "waimai.eleme.secret")
+                  url (or (System/getProperty "waimai.eleme.token_url")
+                          "https://open-api.shop.ele.me/token")}
              :as opts}]
-  @(httpc/request 
-     (merge
-       {:method :post
-        :url "https://open-api.shop.ele.me/token"
-        :headers {"content-type" "application/x-www-form-urlencoded"}
-        :basic-auth [app_key secret]
-        :form-params params}
-       (dissoc opts :app_key :secret))))
+  (httpc/request 
+    (merge
+      {:method :post
+       :url url
+       :headers {"content-type" "application/x-www-form-urlencoded"}
+       :basic-auth [app_key secret]
+       :form-params params}
+      (dissoc opts :app_key :secret))))
 

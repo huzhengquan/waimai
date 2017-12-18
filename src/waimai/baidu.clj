@@ -21,19 +21,21 @@
     (-> joinstr digest/md5 clojure.string/upper-case )))
 
 (defn request
-  [cmd params & {:keys [source secret]
+  [cmd params & {:keys [source secret url]
                  :or {source (System/getProperty "waimai.baidu.source")
-                      secret (System/getProperty "waimai.baidu.secret")}
+                      secret (System/getProperty "waimai.baidu.secret")
+                      url (or (System/getProperty "waimai.baidu.url")
+                              "https://api.waimai.baidu.com") }
                  :as opts}]
   (let [form-params (assoc (make-base-query-params source)
                            "cmd" cmd
                            "body" (json/write-str (or params {})))
         payload (assoc form-params "sign" (make-sign source secret form-params))] 
-    @(httpc/request
-       (merge
-         {:method :post
-          :url "https://api.waimai.baidu.com"
-          :headers {"content-type" "application/x-www-form-urlencoded"}
-          :form-params payload }
-         (dissoc opts :source :secret)))))
+    (httpc/request
+      (merge
+        {:method :post
+         :url url
+         :headers {"content-type" "application/x-www-form-urlencoded"}
+         :form-params payload }
+        (dissoc opts :source :secret)))))
 

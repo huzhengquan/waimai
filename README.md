@@ -10,29 +10,29 @@ Add `[waimai "0.1.1"]` to your `project.clj`.
 
 ```clojure
 (require 'waimai.baidu)
-(waimai.baidu/request "shop.get" {:shop_id "xxx"}
+@(waimai.baidu/request "shop.get" {:shop_id "xxx"}
   :source "xxx" :secret "xxx")
 ; => {:status x :body x :error x ...}
 
 (require 'waimai.meituan)
-(waimai.meituan/request "poi/getids" {}
+@(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get)
 
 (require 'waimai.eleme)
-(waimai.eleme/request "eleme.order.getOrder" {:orderId "xxx"}
+@(waimai.eleme/request "eleme.order.getOrder" {:orderId "xxx"}
   :app_key "xxx" :secret "xxx" :token "xxx")
 
 ; 饿了么沙箱环境
-(waimai.eleme/request "eleme.order.getOrder" {:orderId "xxx"}
+@(waimai.eleme/request "eleme.order.getOrder" {:orderId "xxx"}
   :app_key "xxx" :secret "xxx" :token "xxx"
   :url "https://open-api-sandbox.shop.ele.me/api/v1/")
 
 ; 饿了么刷新token (获取token类似)
-(waimai.eleme/token {:grant_type "refresh_token" :refresh_token "xxx"}
+@(waimai.eleme/token {:grant_type "refresh_token" :refresh_token "xxx"}
   :app_key "xxx" :secret "xxx")
 
 ; 自定义timeout
-(waimai.meituan/request "poi/getids" {}
+@(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
   :timeout 10000)
 ```
@@ -42,16 +42,20 @@ Add `[waimai "0.1.1"]` to your `project.clj`.
 * `waimai.eleme.app_key`
 * `waimai.eleme.secret`
 * `waimai.eleme.token`
+* `waimai.eleme.api_url` - 默认： `https://open-api.shop.ele.me/api/v1/`
+* `waimai.eleme.token_url` - 默认: `https://open-api.shop.ele.me/token`
 * `waimai.meituan.app_id`
 * `waimai.meituan.consumer_secret`
+* `waimai.meituan.api` - 美团API地址前缀，默认: `http://waimaiopen.meituan.com/api/v1/`
 * `waimai.baidu.source`
 * `waimai.baidu.secret`
+* `waimai.baidu.url` - 默认: `https://api.waimai.baidu.com`
 
 ```clojure
 (System/setProperty "waimai.baidu.source" "xxx")
 (System/setProperty "waimai.baidu.secret" "xxx")
 
-(waimai.baidu/request "shop.get" {:shop_id "xxx"})
+@(waimai.baidu/request "shop.get" {:shop_id "xxx"})
 ```
 
 ## License
