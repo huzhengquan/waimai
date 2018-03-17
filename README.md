@@ -1,10 +1,10 @@
 # waimai
 
-clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、饿了么外卖
+Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、饿了么外卖
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[waimai "0.1.2"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.3"]`
 
 ## Usage
 
