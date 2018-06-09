@@ -1,10 +1,10 @@
 # waimai
 
-Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、饿了么外卖
+Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、饿了么外卖、到家美食会
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.3"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.4"]`
 
 ## Usage
 
@@ -31,6 +31,12 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 @(waimai.eleme/token {:grant_type "refresh_token" :refresh_token "xxx"}
   :app_key "xxx" :secret "xxx")
 
+; 到家获取北京地区的门店列表
+(require 'waimai.baidu)
+@(waimai.daojia/request "/OpenApi/Shop/Route/getShopList" {:CityID 1}
+  :merchantID 1234 :merchantKey "xxxx" :api "http://test.openapi.daojia.com.cn")
+; => {:status x :body x :error x ...}
+
 ; 自定义timeout
 @(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
@@ -50,6 +56,9 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 * `waimai.baidu.source`
 * `waimai.baidu.secret`
 * `waimai.baidu.url` - 默认: `https://api.waimai.baidu.com`
+* `waimai.daojia.api` - 到家API的url前缀,默认: `https://openapi.daojia.com.cn`
+* `waimai.daojia.merchantID`
+* `waimai.daojia.merchantKey`
 
 ```clojure
 (System/setProperty "waimai.baidu.source" "xxx")
