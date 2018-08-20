@@ -4,7 +4,7 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.4"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.5"]`
 
 ## Usage
 
@@ -37,6 +37,13 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
   :merchantID 1234 :merchantKey "xxxx" :api "http://test.openapi.daojia.com.cn")
 ; => {:status x :body x :error x ...}
 
+; 飞唧
+(require 'waimai.feiji)
+@(waimai.feiji/request "canceOrder" {:orderNo "ABC123"}
+  :appid "xxx" :secret "xxx" :url "xxx")
+@(waimai.feiji/request "queryFreight" {:storeNo "xxx" :storeName "xxx" :senderLng "xxx" ...}
+  :appid "xxx" :url "xxx" :sign? false)
+
 ; 自定义timeout
 @(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
@@ -52,13 +59,16 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 * `waimai.eleme.token_url` - 默认: `https://open-api.shop.ele.me/token`
 * `waimai.meituan.app_id`
 * `waimai.meituan.consumer_secret`
-* `waimai.meituan.api` - 美团API地址前缀，默认: `http://waimaiopen.meituan.com/api/v1/`
+* `waimai.meituan.api` - 美团API地址前缀，默认: `https://waimaiopen.meituan.com/api/v1/`
 * `waimai.baidu.source`
 * `waimai.baidu.secret`
 * `waimai.baidu.url` - 默认: `https://api.waimai.baidu.com`
 * `waimai.daojia.api` - 到家API的url前缀,默认: `https://openapi.daojia.com.cn`
 * `waimai.daojia.merchantID`
 * `waimai.daojia.merchantKey`
+* `waimai.feiji.url` - 默认:`http://store.feiji-zlsd.com/feiji/`
+* `waimai.feiji.appid`
+* `waimai.feiji.secret`
 
 ```clojure
 (System/setProperty "waimai.baidu.source" "xxx")

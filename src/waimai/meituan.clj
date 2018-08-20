@@ -19,7 +19,7 @@
   "上传图片"
   [^String app_poi_code ^String filename file & {:keys [api app_id consumer_secret ]
                                                  :or {api (or (System/getProperty "waimai.meituan.api")
-                                                              "http://waimaiopen.meituan.com/api/v1/")
+                                                              "https://waimaiopen.meituan.com/api/v1/")
                                                       app_id (System/getProperty "waimai.meituan.app_id")
                                                       consumer_secret (System/getProperty "waimai.meituan.consumer_secret") }
                                                  :as opts}]
@@ -39,7 +39,7 @@
 
 (defn ^{:static true} request
   [^String cmd params & {:keys [api app_id consumer_secret method ]
-                         :or {api (or (System/getProperty "waimai.meituan.api") "http://waimaiopen.meituan.com/api/v1/")
+                         :or {api (or (System/getProperty "waimai.meituan.api") "https://waimaiopen.meituan.com/api/v1/")
                               app_id (System/getProperty "waimai.meituan.app_id")
                               consumer_secret (System/getProperty "waimai.meituan.consumer_secret")
                               method :get}
