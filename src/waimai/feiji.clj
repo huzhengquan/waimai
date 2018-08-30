@@ -15,23 +15,30 @@
       ^bytes (.getBytes md5-str "UTF-8"))))
 
 (defn ^{:static true} request
-  [^String cmd params & {:keys [^String appid ^String secret ^String url ^boolean sign?]
+  [^String cmd params & {:keys [^String appid ^String secret ^String url ^boolean sign? ^boolean debug? ^boolean escape-unicode?]
                          :or {^String appid (System/getProperty "waimai.feiji.appid")
                               ^String secret (System/getProperty "waimai.feiji.secret")
                               ^String url (or (System/getProperty "waimai.feiji.url") "http://store.feiji-zlsd.com/feiji/")
-                              ^boolean sign? true }
+                              ^boolean sign? true 
+                              ^boolean debug? false
+                              ^boolean escape-unicode? true}
                          :as opts}]
   (let [payload (if sign?
-                  (let [params-str (json/write-str params)]
+                  (let [params-str (if (string? params)
+                                     params
+                                     (json/write-str params :escape-unicode escape-unicode?))]
                     {:appid appid
                      :sign (make-sign appid secret params-str)
                      :data params-str})
-                  (assoc params :appid appid))]
+                  (assoc params :appid appid))
+        send-payload (json/write-str payload :escape-unicode escape-unicode?)]
+    (when debug?
+      (println :waimai-feiji-request cmd send-payload))
     (httpc/request
       {:method :post
        :url (str url cmd)
        :headers {"content-type" "application/json"}
-       :body (json/write-str payload)
+       :body send-payload
        :throw-exceptions false
        :timeout 30000
        :accept :json})))

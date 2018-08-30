@@ -30,16 +30,19 @@
     (digest/md5 joinstr )))
 
 (defn ^{:static true} request
-  [^String cmd payload & {:keys [^String merchantID ^String merchantKey ^String api]
+  [^String cmd payload & {:keys [^String merchantID ^String merchantKey ^String api ^boolean debug?]
                           :or {^String merchantID (System/getProperty "waimai.daojia.merchantID")
                                ^String merchantKey (System/getProperty "waimai.daojia.merchantKey")
-                               ^String api (or (System/getProperty "waimai.daojia.api") "https://openapi.daojia.com.cn") }
+                               ^String api (or (System/getProperty "waimai.daojia.api") "https://openapi.daojia.com.cn") 
+                               ^boolean debug? false}
                           :as opts}]
   (let [str-payload (if (string? payload) 
                       payload
                       (json/write-str payload))
         base-params (make-base-query-params merchantID opts)
         query-params (assoc base-params "sign" (make-sign merchantKey base-params str-payload))]
+    (when debug?
+      (println :waimai-daojia-request cmd str-payload))
     (httpc/request
       (merge
         {:method :post

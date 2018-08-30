@@ -35,16 +35,19 @@
 
 (defn ^{:static true} request
   "饿了么的api接口"
-  [^String action params & {:keys [token app_key secret url]
+  [^String action params & {:keys [^String token ^String app_key ^String secret ^String url ^boolean debug?]
                             :or {token (System/getProperty "waimai.eleme.token")
                                  app_key (System/getProperty "waimai.eleme.app_key")
                                  secret (System/getProperty "waimai.eleme.secret")
                                  url (or (System/getProperty "waimai.eleme.api_url")
-                                         "https://open-api.shop.ele.me/api/v1/") }
+                                         "https://open-api.shop.ele.me/api/v1/") 
+                                 debug? false}
                             :as opts}]
   (let [payload (-> (make-base-params app_key action token)
                   (assoc :params (or params {}))
                   (wrap-sign secret))]
+    (when debug?
+      (println :waimai-eleme-request url payload))
     (httpc/request
       (merge
         {:method :post

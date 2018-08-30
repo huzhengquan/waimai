@@ -4,7 +4,7 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.5"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.9"]`
 
 ## Usage
 
@@ -48,6 +48,12 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 @(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
   :timeout 10000)
+
+; DEBUG
+@(waimai.meituan/request "poi/getids" {}
+  :app_id "xxx" :consumer_secret "xxx" :method :get
+  :debug? true)
+
 ```
 
 如果在外卖平台只有一个应用，可以通过`System/setProperty`配置环境变量，这样在使用接口的时候就可以省略相应参数。支持的项有：

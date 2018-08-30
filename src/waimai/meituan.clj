@@ -38,18 +38,21 @@
         (dissoc opts :api :app_id :consumer_secret)))))
 
 (defn ^{:static true} request
-  [^String cmd params & {:keys [api app_id consumer_secret method ]
+  [^String cmd params & {:keys [api app_id consumer_secret method ^boolean debug?]
                          :or {api (or (System/getProperty "waimai.meituan.api") "https://waimaiopen.meituan.com/api/v1/")
                               app_id (System/getProperty "waimai.meituan.app_id")
                               consumer_secret (System/getProperty "waimai.meituan.consumer_secret")
-                              method :get}
+                              method :get
+                              debug? false}
                          :as opts}]
   (let [params (merge (make-base-query-params app_id) params)
         payload (assoc params "sig" (make-sign api consumer_secret cmd params))]
+    (when debug?
+      (println :waimai-meituan-request cmd payload))
     (httpc/request
       (merge
         {:method method
          :url (str api cmd)
          (case method :post :form-params :get :query-params :form-params) payload }
-        (dissoc opts :api :app_id :consumer_secret :method)))))
+        (dissoc opts :api :app_id :consumer_secret :method :debug?)))))
 
