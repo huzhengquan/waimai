@@ -1,4 +1,4 @@
-(defproject huzhengquan/waimai "0.2.0"
+(defproject huzhengquan/waimai "0.2.1"
   :description "外卖平台开发工具包, 包括百度外卖、美团外卖、美团聚宝盆、饿了么外卖、到家美食会"
   :url "https://github.com/huzhengquan/waimai"
   :license {:name "Eclipse Public License"

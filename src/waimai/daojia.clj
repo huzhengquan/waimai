@@ -15,8 +15,9 @@
    "format" (get options :format "JSON")
    })
 
-(defn- ^{:tag String :static true} make-sign
-  [^String merchantKey params ^String strParameter]
+(defn ^{:tag String :static true} make-sign
+  [params ^String strParameter & {:keys [^String merchantKey]
+                                  :or {^String merchantKey (System/getProperty "waimai.daojia.merchantKey")}} ]
   (let [merchant-id (get params "merchantID")
         joinstr (str
                   merchantKey
@@ -40,7 +41,7 @@
                       payload
                       (json/write-str payload))
         base-params (make-base-query-params merchantID opts)
-        query-params (assoc base-params "sign" (make-sign merchantKey base-params str-payload))]
+        query-params (assoc base-params "sign" (make-sign base-params str-payload :merchantKey merchantKey))]
     (when debug?
       (println :waimai-daojia-request cmd str-payload))
     (httpc/request
@@ -50,5 +51,5 @@
          :headers {"content-type" "application/json"}
          :body str-payload 
          :query-params query-params}
-        (dissoc opts :merchantID :merchantKey :api)))))
+        (dissoc opts :merchantID :merchantKey :api :debug?)))))
 

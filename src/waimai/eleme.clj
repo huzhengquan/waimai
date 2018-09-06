@@ -15,8 +15,9 @@
    :action action
    :token token})
 
-(defn- ^{:tag String :static true} make-sign
-  [^String secret ^IPersistentMap payload]
+(defn ^{:tag String :static true} make-sign
+  [^IPersistentMap payload & {:keys [^String secret]
+                              :or {secret (System/getProperty "waimai.eleme.secret")}} ]
   (let [joinstr (str (:action payload)
                   (:token payload)
                   (clojure.string/join ""
@@ -31,7 +32,7 @@
 
 (defn- ^{:tag IPersistentMap :static true} wrap-sign
   [^IPersistentMap payload ^String secret]
-  (assoc payload :signature (make-sign secret payload)))
+  (assoc payload :signature (make-sign payload :secret secret)))
 
 (defn ^{:static true} request
   "饿了么的api接口"

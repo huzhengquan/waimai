@@ -14,7 +14,7 @@
    "appAuthToken" token
    "version" version})
 
-(defn- ^{:tag String :static true} make-sign
+(defn ^{:tag String :static true} make-sign
   [params & {:keys [signkey]
              :or {signkey (System/getProperty "waimai.jvbaopen.signkey")}}]
   (let [joinstr (str 

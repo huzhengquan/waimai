@@ -10,7 +10,7 @@
   {"timestamp" (quot (System/currentTimeMillis) 1000)
    "app_id" appid })
 
-(defn- ^{:tag String :static true} make-sign
+(defn ^{:tag String :static true} make-sign
   [^String api ^String secret ^String cmd ^IPersistentMap params]
   (let [joinstr (str api cmd "?" (clojure.string/join "&" (sort (map #(str (first %) "=" (last %)) params))) secret)]
     (digest/md5 joinstr )))

@@ -7,8 +7,10 @@
 
 (set! *warn-on-reflection* true)
 
-(defn- ^:String make-sign
-  [^String appid ^String secret ^String data]
+(defn ^{:tag String :static true} make-sign
+  [^String data & {:keys [^String appid ^String secret] 
+                   :or {appid (System/getProperty "waimai.feiji.appid")
+                        secret (System/getProperty "waimai.feiji.secret")}} ]
   (let [md5-str ^String (digest/md5 (str data secret))]
     (.encodeToString
       ^java.util.Base64$Encoder (java.util.Base64/getEncoder) 
@@ -28,7 +30,7 @@
                                      params
                                      (json/write-str params :escape-unicode escape-unicode?))]
                     {:appid appid
-                     :sign (make-sign appid secret params-str)
+                     :sign (make-sign params-str :appid appid :secret secret)
                      :data params-str})
                   (assoc params :appid appid))
         send-payload (json/write-str payload :escape-unicode escape-unicode?)]

@@ -4,7 +4,7 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.0"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.1"]`
 
 ## Usage
 
