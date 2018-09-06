@@ -1,10 +1,10 @@
 # waimai
 
-Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、饿了么外卖、到家美食会
+Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、美团聚宝盆、饿了么外卖、到家美食会
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.1.9"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.0"]`
 
 ## Usage
 
@@ -44,6 +44,13 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 @(waimai.feiji/request "queryFreight" {:storeNo "xxx" :storeName "xxx" :senderLng "xxx" ...}
   :appid "xxx" :url "xxx" :sign? false)
 
+; 聚宝盆
+(require 'waimai.jvbaopen)
+@(waimai.jvbaopen/request "waimai/poi/queryPoiInfo" {"ePoiIds" "72,73"}
+  :api "https://api-open-cater.meituan.com/"
+  :signkey "xxx"
+  :method :get)
+
 ; 自定义timeout
 @(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
@@ -75,6 +82,10 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 * `waimai.feiji.url` - 默认:`http://store.feiji-zlsd.com/feiji/`
 * `waimai.feiji.appid`
 * `waimai.feiji.secret`
+* `waimai.jvbaopen.api` - 默认：`https://api-open-cater.meituan.com/`
+* `waimai.jvbaopen.signkey`
+* `waimai.jvbaopen.charset` - 默认：`UTF-8`
+* `waimai.jvbaopen.version` - 默认：`1`
 
 ```clojure
 (System/setProperty "waimai.baidu.source" "xxx")

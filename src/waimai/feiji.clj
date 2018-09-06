@@ -35,10 +35,12 @@
     (when debug?
       (println :waimai-feiji-request cmd send-payload))
     (httpc/request
-      {:method :post
-       :url (str url cmd)
-       :headers {"content-type" "application/json"}
-       :body send-payload
-       :throw-exceptions false
-       :timeout 30000
-       :accept :json})))
+      (merge
+        {:method :post
+         :url (str url cmd)
+         :headers {"content-type" "application/json"}
+         :body send-payload
+         :throw-exceptions false
+         :timeout 30000
+         :accept :json}
+        (dissoc opts :appid :secret :url :sign? :debug? :escape-unicode?)))))
