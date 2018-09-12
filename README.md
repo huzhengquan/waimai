@@ -47,6 +47,7 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 ; 聚宝盆
 (require 'waimai.jvbaopen)
 @(waimai.jvbaopen/request "waimai/poi/queryPoiInfo" {"ePoiIds" "72,73"}
+  :token "xxx"
   :api "https://api-open-cater.meituan.com/"
   :signkey "xxx"
   :method :get)
