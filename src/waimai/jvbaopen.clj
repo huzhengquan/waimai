@@ -8,11 +8,14 @@
 (defn- ^{:tag IPersistentMap :static true} make-base-query-params
   [^String token & {:keys [charset version]
                     :or {charset (or (System/getProperty "waimai.jvbaopen.charset") "UTF-8")
-                         version (or (System/getProperty "waimai.jvbaopen.version") "1")}}]
-  {"timestamp" (System/currentTimeMillis)
-   "charset" charset 
-   "appAuthToken" token
-   "version" version})
+                         version (System/getProperty "waimai.jvbaopen.version")}}]
+  (merge
+    {"timestamp" (System/currentTimeMillis)
+     "charset" charset}
+    (when (not-empty token)
+      {"appAuthToken" token})
+    (when (not-empty version)
+      {"version" version})))
 
 (defn ^{:tag String :static true} make-sign
   [params & {:keys [signkey]
@@ -30,7 +33,7 @@
                          :or {api (or (System/getProperty "waimai.jvbaopen.api") "https://api-open-cater.meituan.com/")
                               method :get
                               charset (or (System/getProperty "waimai.jvbaopen.charset") "UTF-8")
-                              version (or (System/getProperty "waimai.jvbaopen.version") "1")
+                              version (System/getProperty "waimai.jvbaopen.version")
                               signkey (System/getProperty "waimai.jvbaopen.signkey")
                               debug? false}
                          :as opts}]

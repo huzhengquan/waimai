@@ -1,17 +1,17 @@
 # waimai
 
-Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、美团聚宝盆、饿了么外卖、到家美食会
+Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿了么外卖、到家美食会
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.1"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.2"]`
 
 ## Usage
 
 ```clojure
-(require 'waimai.baidu)
-@(waimai.baidu/request "shop.get" {:shop_id "xxx"}
-  :source "xxx" :secret "xxx")
+(require 'waimai.jvbaopen)
+@(waimai.jvbaopen/request "waimai/poi/queryPoiInfo" {"ePoiIds" "xxx"}
+  :token "xxx" :source "xxx" :secret "xxx")
 ; => {:status x :body x :error x ...}
 
 (require 'waimai.meituan)
@@ -32,7 +32,7 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
   :app_key "xxx" :secret "xxx")
 
 ; 到家获取北京地区的门店列表
-(require 'waimai.baidu)
+(require 'waimai.daojia)
 @(waimai.daojia/request "/OpenApi/Shop/Route/getShopList" {:CityID 1}
   :merchantID 1234 :merchantKey "xxxx" :api "http://test.openapi.daojia.com.cn")
 ; => {:status x :body x :error x ...}
@@ -74,24 +74,22 @@ Clojure外卖平台开发工具包，支持百度外卖(3.0)、美团外卖、�
 * `waimai.meituan.app_id`
 * `waimai.meituan.consumer_secret`
 * `waimai.meituan.api` - 美团API地址前缀，默认: `https://waimaiopen.meituan.com/api/v1/`
-* `waimai.baidu.source`
-* `waimai.baidu.secret`
-* `waimai.baidu.url` - 默认: `https://api.waimai.baidu.com`
 * `waimai.daojia.api` - 到家API的url前缀,默认: `https://openapi.daojia.com.cn`
 * `waimai.daojia.merchantID`
 * `waimai.daojia.merchantKey`
+* `waimai.daojia.version`
 * `waimai.feiji.url` - 默认:`http://store.feiji-zlsd.com/feiji/`
 * `waimai.feiji.appid`
 * `waimai.feiji.secret`
 * `waimai.jvbaopen.api` - 默认：`https://api-open-cater.meituan.com/`
 * `waimai.jvbaopen.signkey`
 * `waimai.jvbaopen.charset` - 默认：`UTF-8`
-* `waimai.jvbaopen.version` - 默认：`1`
+* `waimai.jvbaopen.version` - 默认为聚宝盆默认
 
 ```clojure
-(System/setProperty "waimai.baidu.source" "xxx")
-(System/setProperty "waimai.baidu.secret" "xxx")
+(System/setProperty "waimai.jvbaopen.signkey" "xxx")
+(System/setProperty "waimai.jvbaopen.token" "xxx")
 
-@(waimai.baidu/request "shop.get" {:shop_id "xxx"})
+@(waimai.jvbaopen/request "waimai/poi/queryPoiInfo" {"ePoiIds" "xxx"})
 ```
 

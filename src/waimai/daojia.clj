@@ -31,15 +31,18 @@
     (digest/md5 joinstr )))
 
 (defn ^{:static true} request
-  [^String cmd payload & {:keys [^String merchantID ^String merchantKey ^String api ^boolean debug?]
+  [^String cmd payload & {:keys [^String merchantID ^String merchantKey ^String api ^boolean debug? ^String version ^String content-type]
                           :or {^String merchantID (System/getProperty "waimai.daojia.merchantID")
                                ^String merchantKey (System/getProperty "waimai.daojia.merchantKey")
                                ^String api (or (System/getProperty "waimai.daojia.api") "https://openapi.daojia.com.cn") 
+                               ^String version (System/getProperty "waimai.daojia.version")
+                               ^String content-type "application/json"
                                ^boolean debug? false}
                           :as opts}]
-  (let [str-payload (if (string? payload) 
-                      payload
-                      (json/write-str payload))
+  (let [str-payload (cond
+                      (not= content-type "application/json") ""
+                      (string? payload) payload
+                      :else (json/write-str payload))
         base-params (make-base-query-params merchantID opts)
         query-params (assoc base-params "sign" (make-sign base-params str-payload :merchantKey merchantKey))]
     (when debug?
@@ -48,8 +51,10 @@
       (merge
         {:method :post
          :url (str api cmd)
-         :headers {"content-type" "application/json"}
-         :body str-payload 
+         :headers {"content-type" content-type}
          :query-params query-params}
-        (dissoc opts :merchantID :merchantKey :api :debug?)))))
+        (dissoc opts :merchantID :merchantKey :api :debug? :version :format :content-type)
+        (case content-type
+          "multipart/form-data" {:multipart payload}
+          "application/json" {:body str-payload})))))
 
