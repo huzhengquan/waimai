@@ -31,6 +31,17 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 @(waimai.eleme/token {:grant_type "refresh_token" :refresh_token "xxx"}
   :app_key "xxx" :secret "xxx")
 
+;饿了么 - 计算推送消息的签名
+(waimai.eleme/make-push-signature
+  {:requestId "200022294492820841"
+   :appId 123456
+   :shopId 1234567
+   :type 17
+   :message "{\"orderId\":\"12345678\",\"state\":\"invalid\",\"shopId\":1234567,\"updateTime\":1540199570,\"role\":1}"
+   :userId "1234567890"
+   :timestamp 1540199570589}
+  :secret "xxx")
+
 ; 到家获取北京地区的门店列表
 (require 'waimai.daojia)
 @(waimai.daojia/request "/OpenApi/Shop/Route/getShopList" {:CityID 1}

@@ -29,6 +29,18 @@
                   secret)]
     (-> joinstr (.getBytes "UTF-8") digest/md5 clojure.string/upper-case )))
 
+(defn ^{:tag String :static true} make-push-signature
+  "计算push消息的签名"
+  [^IPersistentMap payload & {:keys [^String secret ^String encoding]
+                              :or {secret (System/getProperty "waimai.eleme.secret")
+                                   encoding "UTF-8"}} ]
+  (->
+    ""
+    (clojure.string/join (sort (map (fn [[k v]] (str (name k) "=" v)) (dissoc payload :signature "signature"))))
+    (str secret)
+    (.getBytes encoding)
+    digest/md5
+    clojure.string/upper-case ))
 
 (defn- ^{:tag IPersistentMap :static true} wrap-sign
   [^IPersistentMap payload ^String secret]
