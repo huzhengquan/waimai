@@ -37,7 +37,7 @@
                                ^String api (or (System/getProperty "waimai.daojia.api") "https://openapi.daojia.com.cn") 
                                ^String version (System/getProperty "waimai.daojia.version")
                                ^String content-type "application/json"
-                               ^boolean debug? false}
+                               ^boolean debug? (= (System/getProperty "waimai.debug") "true")}
                           :as opts}]
   (let [str-payload (cond
                       (not= content-type "application/json") ""

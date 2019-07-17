@@ -18,6 +18,7 @@
       {"version" version})))
 
 (defn ^{:tag String :static true} make-sign
+  "生成签名"
   [params & {:keys [signkey]
              :or {signkey (System/getProperty "waimai.jvbaopen.signkey")}}]
   (let [joinstr (str 
@@ -29,13 +30,14 @@
     (-> joinstr digest/sha-1)))
 
 (defn ^{:static true} request
+  "请求聚宝盆api"
   [^String cmd params & {:keys [api token method charset version signkey ^boolean debug?]
                          :or {api (or (System/getProperty "waimai.jvbaopen.api") "https://api-open-cater.meituan.com/")
                               method :get
                               charset (or (System/getProperty "waimai.jvbaopen.charset") "UTF-8")
                               version (System/getProperty "waimai.jvbaopen.version")
                               signkey (System/getProperty "waimai.jvbaopen.signkey")
-                              debug? false}
+                              debug? (= (System/getProperty "waimai.debug") "true")}
                          :as opts}]
   (let [base-query-params (make-base-query-params token :charset charset :version version)
         query-params (merge

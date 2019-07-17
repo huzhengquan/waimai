@@ -11,6 +11,7 @@
    "app_id" appid })
 
 (defn ^{:tag String :static true} make-sign
+  "生成签名"
   [^String api ^String secret ^String cmd ^IPersistentMap params]
   (let [joinstr (str api cmd "?" (clojure.string/join "&" (sort (map #(str (first %) "=" (last %)) params))) secret)]
     (digest/md5 joinstr )))
@@ -38,12 +39,13 @@
         (dissoc opts :api :app_id :consumer_secret)))))
 
 (defn ^{:static true} request
+  "请求美团外卖开放平台api"
   [^String cmd params & {:keys [api app_id consumer_secret method ^boolean debug?]
                          :or {api (or (System/getProperty "waimai.meituan.api") "https://waimaiopen.meituan.com/api/v1/")
                               app_id (System/getProperty "waimai.meituan.app_id")
                               consumer_secret (System/getProperty "waimai.meituan.consumer_secret")
                               method :get
-                              debug? false}
+                              debug? (= (System/getProperty "waimai.debug") "true")}
                          :as opts}]
   (let [params (merge (make-base-query-params app_id) params)
         payload (assoc params "sig" (make-sign api consumer_secret cmd params))]

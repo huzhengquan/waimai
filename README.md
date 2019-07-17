@@ -4,7 +4,7 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.3"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.4"]`
 
 ## Usage
 
@@ -63,6 +63,19 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
   :signkey "xxx"
   :method :get)
 
+; 蜂鸟token
+(require 'waimai.fengniao)
+@(waimai.fengniao/request-token 
+  :appid "xxx"
+  :secret "xxx"
+  :url "https://open-anubis.ele.me/anubis-webapi/get_access_token")
+
+; 蜂鸟api - 查询订单
+@(waimai.fengniao/request "order/query" {:partner_order_code "1383837732"}
+  :appid "xxx"
+  :token "xxx"
+  :url "https://open-anubis.ele.me/anubis-webapi/v2/")
+
 ; 自定义timeout
 @(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
@@ -72,6 +85,7 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 @(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
   :debug? true)
+(System/setProperty "waimai.debug" "true")
 
 ```
 
@@ -96,6 +110,11 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 * `waimai.jvbaopen.signkey`
 * `waimai.jvbaopen.charset` - 默认：`UTF-8`
 * `waimai.jvbaopen.version` - 默认为聚宝盆默认
+* `waimai.fengniao.appid`
+* `waimai.fengniao.secret`
+* `waimai.fengniao.apiurl` - 默认：`https://open-anubis.ele.me/anubis-webapi/v2/`
+* `waimai.fengniao.tokenurl` - 默认：`https://open-anubis.ele.me/anubis-webapi/get_access_token`
+* `waimai.fengniao.token` - 注意token的有效期
 
 ```clojure
 (System/setProperty "waimai.jvbaopen.signkey" "xxx")
