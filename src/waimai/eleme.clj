@@ -54,7 +54,7 @@
                                  app_key (System/getProperty "waimai.eleme.app_key")
                                  secret (System/getProperty "waimai.eleme.secret")
                                  url (System/getProperty "waimai.eleme.api_url" "https://open-api.shop.ele.me/api/v1/") 
-                                 ^boolean debug? (= (System/getProperty "waimai.debug") "true")}
+                                 debug? (= (System/getProperty "waimai.debug") "true")}
                             :as opts}]
   (let [payload (-> (make-base-params app_key action token)
                   (assoc :params (or params {}))

@@ -31,7 +31,18 @@
                         :signature signature}}
         (dissoc opts :appid :secret :debug?)))))
 
-(defn ^{:static true} wrap-payload
+(defn ^{:tag String :static true} make-sign
+  "生成签名"
+  [^String data salt & {:keys [^String appid ^String token]
+                        :or {appid (System/getProperty "waimai.fengniao.appid")
+                             token (System/getProperty "waimai.fengniao.token")}} ]
+  (digest/md5
+    (str "app_id=" appid
+         "&access_token=" token
+         "&data=" data
+         "&salt=" salt)))
+    
+(defn ^{:tag String :static true} wrap-payload
   "包装api的payload"
   [data & {:keys [^String appid ^String token ^boolean debug?]
            :or {appid (System/getProperty "waimai.fengniao.appid")
@@ -39,13 +50,7 @@
                 debug? (= (System/getProperty "waimai.debug") "true")}}]
   (let [salt (str (int (+ (rand 8999) 1000)))
         data (URLEncoder/encode (if (not (string? data)) (json/write-str data) data) "UTF-8")
-        signature (->
-                    (str "app_id=" appid
-                         "&access_token=" token
-                         "&data=" data
-                         "&salt=" salt)
-                    digest/md5
-                    clojure.string/lower-case)]
+        signature (make-sign data salt :appid appid :token token)]
     (when debug?
       (println :waimai-fengniao-wrap-payload :appid appid :token token :salt salt :data data :signature signature))
     (json/write-str

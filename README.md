@@ -1,12 +1,14 @@
 # waimai
 
-Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿了么外卖、到家美食会
+Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿了么外卖、到家美食会、飞唧、蜂鸟配送
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.5"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.6"]`
 
 ## Usage
+
+[cljdoc](https://cljdoc.org/d/huzhengquan/waimai)
 
 ```clojure
 (require 'waimai.jvbaopen)
