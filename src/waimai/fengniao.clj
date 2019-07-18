@@ -11,9 +11,8 @@
   [& {:keys [^String appid ^String secret ^boolean debug? ^String url]
       :or {appid (System/getProperty "waimai.fengniao.appid")
            secret (System/getProperty "waimai.fengniao.secret")
-           url (or (System/getProperty "waimai.fengniao.tokenurl")
-                   "https://open-anubis.ele.me/anubis-webapi/get_access_token")
-           debug? false}
+           url (System/getProperty "waimai.fengniao.tokenurl" "https://open-anubis.ele.me/anubis-webapi/get_access_token")
+           debug? (= (System/getProperty "waimai.debug") "true")}
       :as opts}]
   (let [salt (str (int (+ (rand 8999) 1000)))
         signature (->
@@ -26,13 +25,10 @@
     (httpc/request
       (merge
         {:method :get
-         :headers {"content-type" "application/json; charset=utf-8"}
+         :url url
          :query-params {:app_id appid
                         :salt salt
-                        :signature signature}
-         :throw-exceptions false
-         :timeout 2000
-         :accept :json}
+                        :signature signature}}
         (dissoc opts :appid :secret :debug?)))))
 
 (defn ^{:static true} wrap-payload
@@ -42,26 +38,26 @@
                 token (System/getProperty "waimai.fengniao.token")
                 debug? (= (System/getProperty "waimai.debug") "true")}}]
   (let [salt (str (int (+ (rand 8999) 1000)))
-        data (if (not (string? data)) (json/write-str data) data)
+        data (URLEncoder/encode (if (not (string? data)) (json/write-str data) data) "UTF-8")
         signature (->
                     (str "app_id=" appid
                          "&access_token=" token
-                         "&data=" (URLEncoder/encode data "UTF-8")
+                         "&data=" data
                          "&salt=" salt)
                     digest/md5
                     clojure.string/lower-case)]
     (when debug?
       (println :waimai-fengniao-wrap-payload :appid appid :token token :salt salt :data data :signature signature))
-    {:app_id appid
-     :data data
-     :salt salt
-     :signature signature}))
+    (json/write-str
+      {:app_id appid
+       :data data
+       :salt salt
+       :signature signature})))
 
 (defn ^{:static true} request
   "请求蜂鸟api"
-  [^String cmd params & {:keys [^String appid ^String secret ^String url ^boolean debug? ^String token]
+  [^String cmd params & {:keys [^String appid ^String url ^boolean debug? ^String token]
                          :or {^String appid (System/getProperty "waimai.fengniao.appid")
-                              ^String secret (System/getProperty "waimai.fengniao.secret")
                               ^String token (System/getProperty "waimai.fengniao.token")
                               ^String url (System/getProperty "waimai.fengniao.apiurl" "https://open-anubis.ele.me/anubis-webapi/v2/")
                               ^boolean debug? (= (System/getProperty "waimai.debug") "true")}
@@ -74,8 +70,5 @@
         {:method :post
          :url (str url cmd)
          :headers {"content-type" "application/json"}
-         :form-params payload
-         :throw-exceptions false
-         :timeout 30000
-         :accept :json}
+         :body payload }
         (dissoc opts :appid :secret :url :debug? :token)))))

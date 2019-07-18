@@ -32,9 +32,9 @@
 (defn ^{:static true} request
   "请求聚宝盆api"
   [^String cmd params & {:keys [api token method charset version signkey ^boolean debug?]
-                         :or {api (or (System/getProperty "waimai.jvbaopen.api") "https://api-open-cater.meituan.com/")
+                         :or {api (System/getProperty "waimai.jvbaopen.api" "https://api-open-cater.meituan.com/")
                               method :get
-                              charset (or (System/getProperty "waimai.jvbaopen.charset") "UTF-8")
+                              charset (System/getProperty "waimai.jvbaopen.charset" "UTF-8")
                               version (System/getProperty "waimai.jvbaopen.version")
                               signkey (System/getProperty "waimai.jvbaopen.signkey")
                               debug? (= (System/getProperty "waimai.debug") "true")}

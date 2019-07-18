@@ -16,6 +16,7 @@
    :token token})
 
 (defn ^{:tag String :static true} make-sign
+  "生成签名"
   [^IPersistentMap payload & {:keys [^String secret]
                               :or {secret (System/getProperty "waimai.eleme.secret")}} ]
   (let [joinstr (str (:action payload)
