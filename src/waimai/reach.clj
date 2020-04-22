@@ -2,8 +2,7 @@
   (:require [clojure.data.json :as json]
             digest
             [org.httpkit.client :as httpc])
-  (:import [clojure.lang IPersistentMap]
-           [java.net URLEncoder]))
+  (:import [clojure.lang IPersistentMap]))
 
 (set! *warn-on-reflection* true)
 
@@ -32,7 +31,7 @@
   [^String cmd params & {:keys [^int appid ^String secret ^String api ^boolean debug? ^String version]
                          :or {^String appid (System/getProperty "waimai.reach.appid")
                               ^String secret (System/getProperty "waimai.reach.secret")
-                              ^String api (or (System/getProperty "waimai.reach.api") "http://reach.waimai.uweer.com/api") 
+                              ^String api (or (System/getProperty "waimai.reach.api") "https://reach.waimai.uweer.com/api") 
                               ^String version (or (System/getProperty "waimai.reach.version") "v1")
                               ^boolean debug? (= (System/getProperty "waimai.debug") "true")}
                          :as opts}]
