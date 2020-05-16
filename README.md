@@ -1,10 +1,10 @@
 # waimai
 
-Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿了么外卖、到家美食会、飞唧、蜂鸟配送、REACH
+Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿了么外卖、到家美食会、飞唧、蜂鸟配送、REACH、顺丰同城
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.7"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.8"]`
 
 ## Usage
 
@@ -85,6 +85,12 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
   :secret "xxx"
   :api "http://reach.com")
 
+; 顺丰同城 - 订单状态查询
+(require 'waimai.sf)
+@(waimai.sf/request "external/listorderfeed" {:order_id "xxx", :order_type 2}
+  :dev_id "xxx"
+  :dev_key "xxx")
+
 ; 自定义timeout
 @(waimai.meituan/request "poi/getids" {}
   :app_id "xxx" :consumer_secret "xxx" :method :get
@@ -128,6 +134,9 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 * `waimai.reach.secret`
 * `waimai.reach.version`
 * `waimai.reach.api`
+* `waimai.sf.api` - 默认：`https://commit-openic.sf-express.com/open/api/`
+* `waimai.sf.dev_id`
+* `waimai.sf.dev_key`
 
 ```clojure
 (System/setProperty "waimai.jvbaopen.signkey" "xxx")
