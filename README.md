@@ -4,7 +4,7 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 
 ## Installation
 
-在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.8"]`
+在`project.clj`文件的`dependencies`部分增加`[huzhengquan/waimai "0.2.9"]`
 
 ## Usage
 
@@ -82,6 +82,7 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 (require 'waimai.reach)
 @(waimai.reach/request "shop/getInfo" {:appShopid "123"}
   :appid 123
+  :client 2
   :secret "xxx"
   :api "http://reach.com")
 
@@ -131,6 +132,7 @@ Clojure外卖平台开发工具包，支持美团外卖、美团聚宝盆、饿�
 * `waimai.fengniao.tokenurl` - 默认：`https://open-anubis.ele.me/anubis-webapi/get_access_token`
 * `waimai.fengniao.token` - 注意token的有效期
 * `waimai.reach.appid`
+* `waimai.reach.client`
 * `waimai.reach.secret`
 * `waimai.reach.version`
 * `waimai.reach.api`
