@@ -6,31 +6,22 @@
 
 (set! *warn-on-reflection* true)
 
-(defn- ^{:tag IPersistentMap :static true} make-base-payload
+(defn- ^{:tag IPersistentMap :static true} make-payload
   [appid client params]
-  {"timestamp" (quot (System/currentTimeMillis) 1000)
-   "appid" appid 
-   "client" client
-   "params" params})
+  (json/write-str
+    {"timestamp" (quot (System/currentTimeMillis) 1000)
+     "appid" appid 
+     "client" client
+     "params" params}))
 
 (defn ^{:tag String :static true} make-sign
-  [params & {:keys [^String secret ^String version ^String tag ^String action]
-             :or {^String secret (System/getProperty "waimai.reach.secret")
-                  ^String version "v1"}} ]
-  (let [joinstr (str
-                  secret
-                  (clojure.string/join
-                    ""
-                    (sort
-                      (map
-                        (fn [[k v]]
-                            (str (name k) (json/write-str v :escape-unicode false :escape-slash false)))
-                        params)))
-                  version tag action secret)]
-    (-> 
-      joinstr
-      digest/md5
-      clojure.string/upper-case)))
+  [payload & {:keys [^String secret ^String version ^String cmd]
+              :or {^String secret (System/getProperty "waimai.reach.secret")
+                   ^String version "v1"}} ]
+  (->
+    (str secret "/" version "/" cmd payload secret)
+    digest/md5
+    clojure.string/upper-case))
 
 (defn ^{:static true} request
   [^String cmd params & {:keys [appid client ^String secret ^String api ^boolean debug? ^String version ]
@@ -41,17 +32,17 @@
                               ^boolean debug? (= (System/getProperty "waimai.debug") "true")
                               client (or (System/getProperty "waimai.reach.client") 0)}
                          :as opts}]
-  (let [[tag action] (clojure.string/split cmd #"/" 2)
-        payload (make-base-payload appid client params)
-        sign-payload (assoc payload "sign" (make-sign payload :secret secret :version version :tag tag :action action))]
+  (let [payload (make-payload appid client params)
+        sign (make-sign payload :secret secret :version version :cmd cmd)]
     (when debug?
-      (println :waimai-reach-request cmd sign-payload))
+      (println :waimai-reach-request cmd sign))
     (httpc/request
       (merge
         {:method :post
          :url (str api "/" version "/" cmd)
+         :query-params {:sign sign}
          :headers {"content-type" "application/json"} 
-         :body (json/write-str sign-payload)
+         :body payload
          :timeout 10000}
         (select-keys opts [:timeout :user-agent :keepalive :max-redirects :follow-redirects])))))
 
